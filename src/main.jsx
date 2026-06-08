@@ -1,127 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ArrowRight, Bolt, Flame, Gamepad2, Mountain, Network, Play, Shield, Sparkles, Swords, Trophy, Wand2 } from 'lucide-react';
 import './styles.css';
 
-const reactions = [
-  { a: '🔥 Fire', b: '🧊 Ice', out: '💧 Water', note: 'melt the floor, change the chase lane' },
-  { a: '⚡ Lightning', b: '💧 Water', out: '⚡ Shock zone', note: 'turn a puddle into punishment' },
-  { a: '🔥 Fire', b: '🛢️ Oil', out: '🌋 Inferno', note: 'a quiet slick becomes a wildfire' },
-  { a: '💨 Wind', b: '💨 Steam', out: 'clear sightline', note: 'counterplay through the cloud' },
-  { a: '⚡ Lightning', b: '🪨 Earth', out: 'Shatter', note: 'break cover with a read' },
-  { a: '🧊 Ice', b: '🔥 Fire', out: 'Snuffed', note: 'defense can be elemental too' },
-];
+const spellvoltMarkup = '\n\n<!-- ============ SVG neon glyph symbols ============ -->\n<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>\n  <symbol id="g-fire" viewBox="0 0 24 24"><path d="M12 2c1 3-2 4-2 7a2.5 2.5 0 0 0 5 0c0-1 0-1.6-.4-2.4C17 9 19 12 19 15a7 7 0 1 1-14 0c0-4 4-6 4-9 0-2 1-3 3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>\n  <symbol id="g-ice" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2v20M3.3 7l17.4 10M20.7 7L3.3 17"/><path d="M12 5l-2.4 1.4M12 5l2.4 1.4M12 19l-2.4-1.4M12 19l2.4-1.4M5.6 9.2l.2 2.7M18.4 9.2l-.2 2.7M5.6 14.8l.2-2.7M18.4 14.8l-.2-2.7"/></g></symbol>\n  <symbol id="g-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 10-13h-6l1-7z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>\n  <symbol id="g-water" viewBox="0 0 24 24"><path d="M12 3c4 5 6.5 8 6.5 11a6.5 6.5 0 1 1-13 0C5.5 11 8 8 12 3z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>\n  <symbol id="g-shield" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5l-8-3z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>\n  <symbol id="g-earth" viewBox="0 0 24 24"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5zM3 7l9 5 9-5M12 12v10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>\n  <symbol id="g-steam" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 16h14M4 11a4 4 0 0 1 7-2 4 4 0 0 1 7 1"/><path d="M8 20c0-1.5 1-1.5 1-3M12 20c0-1.5 1-1.5 1-3M16 20c0-1.5 1-1.5 1-3"/></g></symbol>\n  <symbol id="g-burst" viewBox="0 0 24 24"><path d="M12 2l2.2 5.2L20 5l-2.2 5.5L23 12l-5.2 1.5L20 19l-5.5-2.2L12 22l-1.5-5.2L5 19l2.2-5.5L2 12l5.2-1.5L5 5l5.5 2.2z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></symbol>\n  <symbol id="g-dash" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 8h11M3 12h14M3 16h9"/><path d="M16 6l5 6-5 6"/></g></symbol>\n  <symbol id="g-swords" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 14.5 21 21M19 21h2v-2M3 3h4l9 9-2 2-9-9V3z"/><path d="M9.5 14.5 3 21M5 21H3v-2M21 3h-4l-9 9 2 2 9-9V3z"/></g></symbol>\n  <symbol id="g-tower" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M7 22V8l5-5 5 5v14M7 22h10M4 22h16"/><path d="M10 22v-4h4v4M10 11h4M10 14.5h4"/></g></symbol>\n  <symbol id="g-bot" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V4M9 4h6M9 13h.01M15 13h.01M9 16h6"/></g></symbol>\n  <symbol id="g-pad" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12a4 4 0 0 1 4 4l-1 5a2.5 2.5 0 0 1-4.4 1L15 16H9l-1.6 2A2.5 2.5 0 0 1 3 17l-1-5a4 4 0 0 1 4-4z"/><path d="M7 11v3M5.5 12.5h3M16 11.5h.01M18 13.5h.01"/></g></symbol>\n  <symbol id="g-net" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8 16.5 16 7.5M8.2 18H15.5M18 8.5v7"/></g></symbol>\n  <symbol id="g-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>\n  <symbol id="g-play" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="currentColor"/></symbol>\n  <symbol id="g-star" viewBox="0 0 24 24"><path d="M12 3l2.7 6.3 6.8.6-5.1 4.5 1.5 6.6L12 17.8 6.1 21.5l1.5-6.6L2.5 9.9l6.8-.6z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>\n</defs></svg>\n\n<!-- ============ backdrop ============ -->\n<div class="cosmos"></div>\n<canvas class="stars" id="stars"></canvas>\n<div class="grid-floor" id="gridFloor"></div>\n<div class="vignette"></div>\n<div class="scanlines"></div>\n<div class="reticle" id="reticle"><i class="tick t"></i><i class="tick b"></i><i class="tick l"></i><i class="tick r"></i></div>\n\n<!-- ============ nav ============ -->\n<nav class="nav" id="nav">\n  <a class="nav__brand" href="#top">SPELL<span class="bolt">⌁</span>VOLT</a>\n  <div class="nav__links">\n    <a href="#ways">Two Ways</a>\n    <a href="#kit">The Kit</a>\n    <a href="#matrix">Reactions</a>\n    <a href="#tower">The Tower</a>\n    <a href="#modes">Modes</a>\n    <a href="#screens">Screens</a>\n  </div>\n  <a class="nav__cta" href="https://tjonestj.itch.io/spell-duel" target="_blank" rel="noopener">Play Free</a>\n</nav>\n\n<main id="top">\n\n<!-- ============ HERO ============ -->\n<section class="hero wrap">\n  <div class="hero__grid">\n    <div class="hero__copy">\n      <span class="eyebrow reveal">Neon mage-vs-mage arena</span>\n      <h1 class="hero__title reveal d1">SPELL<span class="volt">VOLT</span></h1>\n      <p class="hero__tag reveal d2">Shoot the player — <span class="or">or shoot the floor.</span></p>\n      <p class="hero__sub reveal d2">A side-view wizard duel where every projectile is a skillshot and every spell <b>rewrites the arena</b>. One modular kit, a full elemental reaction matrix, two ways to play.</p>\n      <div class="hero__cta reveal d3">\n        <a class="btn btn-primary" href="https://tjonestj.itch.io/spell-duel" target="_blank" rel="noopener">\n          <svg width="16" height="16"><use href="#g-play"/></svg> Play in browser <svg class="ar" width="18" height="18"><use href="#g-arrow"/></svg>\n        </a>\n        <a class="btn btn-ghost" href="#ways"><svg width="16" height="16"><use href="#g-star"/></svg> See how it plays</a>\n      </div>\n      <div class="hero__meta reveal d4">\n        <div class="m"><b>1v1</b><span>PvP Duel</span></div>\n        <div class="m"><b>100</b><span>Tower floors</span></div>\n        <div class="m"><b>7</b><span>Elements react</span></div>\n        <div class="m"><b>Free</b><span>On itch.io</span></div>\n      </div>\n    </div>\n\n    <div class="hero__art reveal d2">\n      <div class="stage">\n        <div class="stage__glow"></div>\n        <div class="stage__ring r1"></div>\n        <div class="stage__ring r2"></div>\n        <div class="stage__ring r3"></div>\n        <div class="orbit">\n          <div class="node fire"><span><svg width="24" height="24"><use href="#g-fire"/></svg></span></div>\n          <div class="node ice"><span><svg width="24" height="24"><use href="#g-ice"/></svg></span></div>\n          <div class="node light"><span><svg width="24" height="24"><use href="#g-bolt"/></svg></span></div>\n          <div class="node water"><span><svg width="24" height="24"><use href="#g-water"/></svg></span></div>\n        </div>\n        <div class="wizard px"></div>\n      </div>\n    </div>\n  </div>\n  <div class="scroll-hint">Scroll<span class="dot"></span></div>\n</section>\n\n<!-- ============ TWO WAYS ============ -->\n<section class="s wrap" id="ways">\n  <div class="s__head reveal">\n    <span class="eyebrow">One arena · one spellkit</span>\n    <h2 class="head">Two ways to play.</h2>\n    <p class="lead">The same skillshots, the same terrain-shaping, the same elemental matrix — pointed at two completely different fights. <strong>The kit you build carries between them.</strong></p>\n  </div>\n\n  <div class="ways">\n    <article class="way duel reveal">\n      <div class="way__art"></div>\n      <span class="way__tag"><svg width="14" height="14" style="vertical-align:-2px"><use href="#g-swords"/></svg> &nbsp;The Duel</span>\n      <h3 class="way__name">Execution only.</h3>\n      <p class="way__desc">Symmetric 1-on-1 PvP with <b>no power creep in the ring</b> — no items, no XP, no stat unlocks. Pick a class, build a kit, and the only edge is the read you make next.</p>\n      <ul>\n        <li><i class="ic"></i>Predict, position, and punish the next cast</li>\n        <li><i class="ic"></i>Terrain is symmetric — your own patch can burn you</li>\n        <li><i class="ic"></i>First to 5. No comeback items. Just your hands.</li>\n      </ul>\n      <a class="way__link" href="#modes">Three ways to fight <svg width="16" height="16"><use href="#g-arrow"/></svg></a>\n    </article>\n\n    <article class="way tower reveal d1" id="tower">\n      <div class="way__art"></div>\n      <span class="way__tag"><svg width="14" height="14" style="vertical-align:-2px"><use href="#g-tower"/></svg> &nbsp;The Tower</span>\n      <h3 class="way__name">Climb forever.</h3>\n      <p class="way__desc">A roguelite climb where you finally <b>do</b> stack power. Start with one spell, climb <b>100 floors</b> of swarms and bosses, banking upgrades and augments — beat the architect, then climb endlessly.</p>\n      <ul>\n        <li><i class="ic"></i>Spend skill points between floors</li>\n        <li><i class="ic"></i>Run-defining augments every 10 floors</li>\n        <li><i class="ic"></i>Permadeath — with a soft landing</li>\n      </ul>\n      <a class="way__link" href="#bosses">Meet the bosses <svg width="16" height="16"><use href="#g-arrow"/></svg></a>\n    </article>\n  </div>\n\n  <p class="shared reveal d2">The system that makes the duel <b>deep</b> is the system that makes the climb <b>endless</b>.</p>\n</section>\n\n<!-- ============ KIT ============ -->\n<section class="s wrap" id="kit">\n  <div class="s__head reveal">\n    <span class="eyebrow v">Build your own kit</span>\n    <h2 class="head">Five roles. <span class="glow-v">Your loadout.</span></h2>\n    <p class="lead">Every slot is filled from a pool of interchangeable spells — mix your own, or start from a one-tap spellbook. <strong>Cooldowns gate your damage; a shared mana pool gates everything.</strong></p>\n  </div>\n\n  <div class="kit">\n    <div class="slot reveal" data-el="fire">\n      <div class="slot__num">SLOT 1 · POKE</div>\n      <div class="slot__icon"><svg width="28" height="28"><use href="#g-fire"/></svg></div>\n      <div class="slot__role">Fireball</div>\n      <div class="slot__spell">Low-cooldown poke. Hold to charge into a fat, knockback shot.</div>\n    </div>\n    <div class="slot reveal d1" data-el="ice">\n      <div class="slot__num">SLOT 2 · CONTROL</div>\n      <div class="slot__icon"><svg width="28" height="28"><use href="#g-ice"/></svg></div>\n      <div class="slot__role">Ice Bolt</div>\n      <div class="slot__spell">Lands a slick patch that strips jump and skates you sideways.</div>\n    </div>\n    <div class="slot reveal d2" data-el="light">\n      <div class="slot__num">SLOT 3 · ATTACK</div>\n      <div class="slot__icon"><svg width="28" height="28"><use href="#g-bolt"/></svg></div>\n      <div class="slot__role">Lightning</div>\n      <div class="slot__spell">Fast bolt that leaves a DoT zone — and fuels chain reactions.</div>\n    </div>\n    <div class="slot reveal d3" data-el="shield">\n      <div class="slot__num">SLOT 4 · DEFENSE</div>\n      <div class="slot__icon"><svg width="28" height="28"><use href="#g-shield"/></svg></div>\n      <div class="slot__role">Shield</div>\n      <div class="slot__spell">A brief immunity bubble. Read the cast, eat the hit, punish.</div>\n    </div>\n    <div class="slot reveal d4" data-el="earth">\n      <div class="slot__num">SLOT 5 · HEAVY</div>\n      <div class="slot__icon"><svg width="28" height="28"><use href="#g-earth"/></svg></div>\n      <div class="slot__role">Rock Lob</div>\n      <div class="slot__spell">Arcs a stone into a solid wall — real, two-sided cover.</div>\n    </div>\n  </div>\n\n  <p class="dash-note reveal">…plus a hardcoded i-frame <b><svg width="16" height="16" style="vertical-align:-3px"><use href="#g-dash"/></svg> Dash</b>. Not a slot — just how mages move.</p>\n\n  <div class="kit-presets reveal d1">\n    <span class="preset">Pyromancer</span>\n    <span class="preset">Cryomancer</span>\n    <span class="preset">Stormcaller</span>\n    <span class="preset">Trickster</span>\n    <span class="preset">Balanced</span>\n  </div>\n</section>\n\n<!-- ============ MATRIX ============ -->\n<section class="s wrap" id="matrix">\n  <div class="s__head reveal">\n    <span class="eyebrow">The identity</span>\n    <h2 class="head">Every element <span class="glow-c">reacts.</span></h2>\n    <p class="lead">Spells don\'t just hit — they linger, and they combine. Cast onto a surface that\'s already there and the floor transforms. <strong>Hover the grid: row is what you cast, column is what\'s already down.</strong></p>\n  </div>\n\n  <div class="matrix-wrap">\n    <div class="matrix" id="reactGrid"><!-- built by JS --></div>\n    <div class="react-detail" id="reactDetail">\n      <div class="combo">\n        <span class="chip" id="rdA"><svg width="26" height="26"><use href="#g-fire"/></svg></span>\n        <span class="plus">+</span>\n        <span class="chip" id="rdB"><svg width="26" height="26"><use href="#g-ice"/></svg></span>\n        <span class="arr"><svg width="22" height="22"><use href="#g-arrow"/></svg></span>\n        <span class="chip" id="rdC"><svg width="26" height="26"><use href="#g-water"/></svg></span>\n      </div>\n      <h3 id="rdTitle">Hover a reaction</h3>\n      <p id="rdText" class="placeholder">Pick any cell in the grid to see what casting one element onto another does to the arena floor.</p>\n      <div class="legend">\n        <span class="li"><span class="sw" style="background:var(--fire);box-shadow:0 0 8px var(--fire)"></span>Fire</span>\n        <span class="li"><span class="sw" style="background:var(--ice);box-shadow:0 0 8px var(--ice)"></span>Ice</span>\n        <span class="li"><span class="sw" style="background:var(--lightning);box-shadow:0 0 8px var(--lightning)"></span>Lightning</span>\n        <span class="li"><span class="sw" style="background:var(--water);box-shadow:0 0 8px var(--water)"></span>Water</span>\n      </div>\n    </div>\n  </div>\n</section>\n\n<!-- ============ BOSSES ============ -->\n<section class="s wrap" id="bosses">\n  <div class="s__head reveal">\n    <span class="eyebrow v">Named set-pieces</span>\n    <h2 class="head">Bosses that <span class="glow-f">light the whole stage.</span></h2>\n    <p class="lead">Each tower boss wields its own slice of the matrix and tints the entire arena to its element. Survive them on your way to the summit.</p>\n  </div>\n\n  <div class="bosses">\n    <div class="boss reveal" data-boss="fire"><span class="el">Fire</span><h4>Pyrelord</h4><p>Floods the floor with inferno and forces you to keep moving.</p></div>\n    <div class="boss reveal d1" data-boss="ice"><span class="el">Frost</span><h4>Glacina</h4><p>Skates the whole arena into a slick — footing is never free.</p></div>\n    <div class="boss reveal d2" data-boss="light"><span class="el">Storm</span><h4>Volthrax</h4><p>Chains shock zones across the platforms in rolling waves.</p></div>\n    <div class="boss reveal" data-boss="rock"><span class="el">Earth</span><h4>Axel</h4><p>A literal neon rock star — walls, slams, and a wailing solo.</p></div>\n    <div class="boss reveal d1" data-boss="storm2"><span class="el">Tempest</span><h4>Nimbus</h4><p>Gusts that scatter your steam and shove every shot off-line.</p></div>\n    <div class="boss reveal d2" data-boss="summit2"><span class="el">Floor 50</span><h4>The Gauntlet</h4><p>A relentless run of swarms before the climb to the summit.</p></div>\n    <div class="boss summit reveal" data-boss="summit"><span class="el">Floor 100 · The Summit</span><h4>XENOS, THE ARCHITECT</h4><p>The tower\'s colossal, rainbow-shimmering final boss — wielding the entire element matrix at once.</p></div>\n  </div>\n</section>\n\n<!-- ============ MODES ============ -->\n<section class="s wrap" id="modes">\n  <div class="s__head reveal">\n    <span class="eyebrow">Three ways to fight</span>\n    <h2 class="head">Solo, couch, <span class="glow-c">or across the net.</span></h2>\n  </div>\n  <div class="modes">\n    <div class="mode reveal"><div class="ic" style="color:var(--cyan-hi)"><svg width="28" height="28"><use href="#g-bot"/></svg></div><h4>VS Bot</h4><p>A mobile, dodge-aware, hazard-aware dummy at Easy, Medium, or Hard.</p></div>\n    <div class="mode reveal d1"><div class="ic" style="color:var(--volt-hi)"><svg width="28" height="28"><use href="#g-pad"/></svg></div><h4>Local 2P</h4><p>P1 on keyboard + mouse, P2 on a gamepad. Assign a device per player.</p></div>\n    <div class="mode reveal d2"><div class="ic" style="color:var(--fire-hi)"><svg width="28" height="28"><use href="#g-net"/></svg></div><h4>LAN</h4><p>Host or join over the network — host-authoritative, internet-capable.</p></div>\n  </div>\n</section>\n\n\n<!-- ============ REAL SCREENS ============ -->\n<section class="s wrap" id="screens">\n  <div class="s__head reveal">\n    <span class="eyebrow v">Real game captures</span>\n    <h2 class="head">The neon menu, <span class="glow-c">for real.</span></h2>\n    <p class="lead">Keeping the best win from the original live site: actual Spellvolt captures instead of fake mockups — the current v1.2 menu energy and the classic duel flow.</p>\n  </div>\n  <div class="screens-grid">\n    <figure class="screen-card reveal">\n      <img src="/assets/screenshots/itch-shot.png" alt="Spellvolt v1.2.0 main menu with PvP, Tower, Practice, and Level Editor" />\n      <figcaption><b>Current build v1.2.0</b><span>PvP / Tower / Practice / Level Editor</span></figcaption>\n    </figure>\n    <figure class="screen-card reveal d1">\n      <img src="/assets/screenshots/itch-cover.png" alt="Spellvolt classic duel menu with VS Bot, VS Player, and VS LAN" />\n      <figcaption><b>Classic duel menu</b><span>VS Bot / local 2P / LAN</span></figcaption>\n    </figure>\n  </div>\n</section>\n\n<!-- ============ CTA ============ -->\n<section class="cta wrap">\n  <div class="cta__inner reveal">\n    <span class="eyebrow" style="justify-content:center">Free · plays in your browser</span>\n    <h2>Step into the arena.</h2>\n    <p>No download, no account. Build a kit, light up the floor, and find out whether you shoot the player — or shoot the floor.</p>\n    <div class="hero__cta">\n      <a class="btn btn-primary" href="https://tjonestj.itch.io/spell-duel" target="_blank" rel="noopener"><svg width="16" height="16"><use href="#g-play"/></svg> Play Spellvolt <svg class="ar" width="18" height="18"><use href="#g-arrow"/></svg></a>\n    </div>\n  </div>\n</section>\n\n</main>\n\n<!-- ============ FOOTER ============ -->\n<footer class="footer wrap">\n  <div class="footer__row">\n    <div class="footer__brand">SPELL<span class="bolt">⌁</span>VOLT</div>\n    <div class="footer__links">\n      <a href="#ways">Two Ways</a>\n      <a href="#kit">The Kit</a>\n      <a href="#matrix">Reactions</a>\n      <a href="#modes">Modes</a>\n      <a href="#screens">Screens</a>\n      <a href="https://tjonestj.itch.io/spell-duel" target="_blank" rel="noopener">Play on itch.io</a>\n    </div>\n  </div>\n  <p class="footer__fine">Spellvolt — a neon 2D mage-vs-mage arena about skillshots, terrain-shaping, and elemental reactions. Built in Godot. Free to play.</p>\n</footer>\n\n';
 
-const modes = [
-  { icon: Swords, title: 'PvP', body: 'Symmetric mage-vs-mage duels where the only edge is execution, reads, cooldowns, mana, and terrain control.' },
-  { icon: Trophy, title: 'Defeat the Tower', body: 'A roguelite climb through swarms, bosses, augments, shops, co-op revives, score, and the floor-100 architect.' },
-  { icon: Wand2, title: 'Practice + Tutorial', body: 'A training room and solo lab to learn dash timing, charged casts, terrain patches, and combo reactions.' },
-  { icon: Network, title: 'Local + LAN', body: 'Couch 2P, gamepad support, arcade joystick mode, LAN host/join, and co-op tower runs.' },
-];
+function App() {
+  useEffect(() => {
+    const existing = document.querySelector('script[data-spellvolt-interactions]');
+    if (existing) existing.remove();
+    const script = document.createElement('script');
+    script.src = '/spellvolt-app.js';
+    script.defer = true;
+    script.dataset.spellvoltInteractions = 'true';
+    document.body.appendChild(script);
+    return () => script.remove();
+  }, []);
 
-const pillars = [
-  ['Every projectile is a skillshot', 'Hits are earned. Dodges matter. Dash gives mages a real outplay button.'],
-  ['Every spell leaves a footprint', 'Fire burns, ice steals jump, lightning punishes contact, water conducts, steam hides, wind shoves.'],
-  ['Build your own kit', 'Five roles — poke, control, attack, defense, heavy — each with interchangeable choices and one-tap spellbooks.'],
-  ['The floor is the meta', 'The best cast might not hit the player. It might transform the terrain before they can punish you.'],
-];
-
-function Logo() {
-  return <div className="spellLogo" aria-label="Spellvolt"><span>Spell</span><span>volt</span></div>;
+  return <div dangerouslySetInnerHTML={{ __html: spellvoltMarkup }} />;
 }
-
-function Nav() {
-  return <nav className="nav">
-    <a className="brand" href="#top" aria-label="Spellvolt home"><img src="/assets/icon.png" alt=""/><span>Spellvolt</span></a>
-    <div className="navLinks">
-      <a href="#play">Play</a><a href="#modes">Loadout</a><a href="#matrix">Interactions</a><a href="#screens">Screens</a>
-    </div>
-    <a className="navCta" href="https://tjonestj.itch.io/spell-duel"><Play size={15}/> Play on itch</a>
-  </nav>
-}
-
-function Hero() {
-  return <header id="top" className="hero section">
-    <div className="heroCopy">
-      <Logo />
-      <div className="eyebrow"><Sparkles size={16}/> 1v1 · arcade · combat</div>
-      <h1>Shoot the player — or shoot the floor.</h1>
-      <p className="lede">A neon side-view wizard battler where skillshots leave living terrain behind. Build a five-spell kit, reshape the arena, and turn elemental reactions into outplays.</p>
-      <div className="heroActions">
-        <a className="primaryBtn" href="https://tjonestj.itch.io/spell-duel"><Play size={18}/> Play on itch.io</a>
-        <a className="secondaryBtn" href="#screens">See real screenshots <ArrowRight size={18}/></a>
-      </div>
-      <div className="stats">
-        <div><strong>PvP</strong><span>duels</span></div>
-        <div><strong>100</strong><span>tower floors</span></div>
-        <div><strong>LAN</strong><span>co-op + versus</span></div>
-      </div>
-    </div>
-    <figure className="heroScreenshot">
-      <img src="/assets/screenshots/itch-shot.png" alt="Spellvolt main menu showing PvP, Defeat the Tower, Practice, Level Editor, Replay Tutorial, and Quit Game" />
-      <figcaption><span>Current build v1.2.0</span><b>Real in-game menu capture</b></figcaption>
-    </figure>
-  </header>
-}
-
-function Systems() {
-  return <section id="systems" className="section systems">
-    <div className="sectionHeader"><span className="kicker">The shared core</span><h2>Prediction, positioning, terrain shaping.</h2><p>Spellvolt’s identity is environmental persistence: every cast creates a new tactical problem that can be dodged, exploited, cleansed, or transformed.</p></div>
-    <div className="pillarGrid">
-      {pillars.map(([title, body], i) => <article className="pillar" key={title}><span className="num">0{i+1}</span><h3>{title}</h3><p>{body}</p></article>)}
-    </div>
-  </section>
-}
-
-function Modes() {
-  return <section id="modes" className="section modes">
-    <div className="modeVisual">
-      <Logo />
-      <div className="menuStack">
-        <span className="menuButton active">PVP</span>
-        <span className="menuButton tower">DEFEAT THE TOWER</span>
-        <span className="menuButton">PRACTICE</span>
-        <span className="menuButton editor">LEVEL EDITOR</span>
-      </div>
-    </div>
-    <div>
-      <span className="kicker">Ways to play</span><h2>Itch menu energy, now on spellvolt.com.</h2>
-      <div className="modeList">{modes.map(({icon: Icon, title, body}) => <article className="mode" key={title}><Icon size={22}/><div><h3>{title}</h3><p>{body}</p></div></article>)}</div>
-    </div>
-  </section>
-}
-
-function Matrix() {
-  return <section id="matrix" className="section matrix">
-    <div className="sectionHeader"><span className="kicker">Interactions</span><h2>The reaction system is the meta.</h2><p>Terrain is not decoration. It is ammunition, cover, trap, counterplay, and combo starter.</p></div>
-    <div className="reactionGrid">{reactions.map(r => <article className="reaction" key={`${r.a}-${r.b}`}><div className="formula"><span>{r.a}</span><Bolt size={14}/><span>{r.b}</span><ArrowRight size={14}/><strong>{r.out}</strong></div><p>{r.note}</p></article>)}</div>
-  </section>
-}
-
-function Screens() {
-  return <section id="screens" className="section screens">
-    <div className="sectionHeader"><span className="kicker">Real game captures</span><h2>Neon UI, arcade floor, spell-mode clarity.</h2><p>The site now uses screenshots pulled from the actual current Itch presentation instead of placeholder mockups.</p></div>
-    <div className="screenGrid">
-      <figure><img src="/assets/screenshots/itch-shot.png" alt="Spellvolt v1.2.0 main menu with PvP selected"/><figcaption>v1.2.0 main menu — PvP / Tower / Practice / Level Editor</figcaption></figure>
-      <figure><img src="/assets/screenshots/itch-cover.png" alt="Spell Duel menu showing VS Bot, VS Player, and VS LAN"/><figcaption>Classic duel menu — VS Bot, local 2P, and LAN</figcaption></figure>
-    </div>
-  </section>
-}
-
-function Spellbook() {
-  const cards = [
-    ['Pyromancer', Flame, 'charge fireballs, wildfire patches, inferno finishers'],
-    ['Stormcaller', Bolt, 'fast pressure, shock zones, explosive conversions'],
-    ['Cryomancer', Shield, 'freeze lanes, deny jumps, melt into water setups'],
-    ['Trickster', Gamepad2, 'wind, vortex, platforms, terrain misdirection'],
-  ];
-  return <section className="section spellbook"><div className="sectionHeader"><span className="kicker">Loadout</span><h2>Pick a spellbook, then make it yours.</h2></div><div className="bookGrid">{cards.map(([name, Icon, copy]) => <article className="book" key={name}><Icon/><h3>{name}</h3><p>{copy}</p></article>)}</div></section>
-}
-
-function CTA() {
-  return <section id="play" className="section cta"><div><span className="kicker">spellvolt.com</span><h2>Enter the neon arena.</h2><p>Play the current build, test PvP and Tower, then come back with a better read on which surfaces, reactions, and spellbooks define your style.</p></div><div className="ctaActions"><a className="primaryBtn" href="https://tjonestj.itch.io/spell-duel"><Play size={18}/> Play on itch.io</a><a className="secondaryBtn" href="#matrix">Study interactions</a></div></section>
-}
-
-function App() { return <><Nav/><main><Hero/><Systems/><Modes/><Matrix/><Screens/><Spellbook/><CTA/></main><footer>© {new Date().getFullYear()} Spellvolt · 1v1 · arcade · combat · spellvolt.com</footer></>; }
 
 createRoot(document.getElementById('root')).render(<App />);
