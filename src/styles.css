@@ -290,16 +290,130 @@ html.reveal-done .reveal { opacity:1 !important; transform:none !important; tran
 }
 @keyframes pulse { 0%,100%{ opacity:.7; transform:scale(1);} 50%{ opacity:1; transform:scale(1.06);} }
 
-/* animated wizard from sprite sheet (6 frames, 128x78) */
-.wizard {
-  position: relative; z-index: 3;
-  width: 192px; height: 117px;       /* 128x78 * 1.5 */
-  background: url("/assets/wizard_idle.png") left center / 1152px 117px;
-  animation: wiz 0.9s steps(6) infinite, bob 3.4s ease-in-out infinite;
-  filter: drop-shadow(0 0 16px rgba(168,123,255,.6)) drop-shadow(0 8px 12px rgba(0,0,0,.6));
+/* custom Spellvolt player avatar — square body, triangle hat, circle orb */
+.custom-mage {
+  position: relative;
+  z-index: 3;
+  width: 190px;
+  height: 230px;
+  animation: mageFloat 3.4s ease-in-out infinite;
+  filter:
+    drop-shadow(0 0 18px rgba(116,243,247,.95))
+    drop-shadow(0 0 38px rgba(196,166,255,.65))
+    drop-shadow(0 18px 28px rgba(0,0,0,.72));
 }
-@keyframes wiz { to { background-position: -1152px center; } }
-@keyframes bob { 0%,100%{ transform: translateY(-4px);} 50%{ transform: translateY(4px);} }
+.custom-mage::before {
+  content: "";
+  position: absolute;
+  inset: 10px 14px 6px;
+  border-radius: 42% 42% 32% 32%;
+  background: conic-gradient(from 0deg, #ff5a2c, #ffe14d, #38d8e6, #a87bff, #ff5a2c);
+  filter: blur(28px);
+  opacity: .68;
+  animation: rainbowSpin 5.5s linear infinite;
+}
+.mage-aura {
+  position: absolute;
+  inset: 18px 2px 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.24);
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255,255,255,.15), transparent 22%),
+    conic-gradient(from 90deg, rgba(255,90,44,.7), rgba(255,225,77,.62), rgba(56,216,230,.72), rgba(168,123,255,.7), rgba(255,90,44,.7));
+  opacity: .42;
+  filter: blur(.2px);
+  animation: rainbowSpin 9s linear infinite reverse;
+}
+.mage-hat {
+  position: absolute;
+  left: 50%;
+  top: 18px;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  border-left: 52px solid transparent;
+  border-right: 52px solid transparent;
+  border-bottom: 90px solid #19102f;
+  filter: drop-shadow(0 0 14px rgba(168,123,255,.8));
+}
+.mage-hat::before {
+  content: "";
+  position: absolute;
+  left: -43px;
+  top: 55px;
+  width: 86px;
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--fire-hi), var(--spark), var(--cyan-hi), var(--volt-hi));
+  box-shadow: 0 0 18px rgba(116,243,247,.75);
+}
+.mage-body {
+  position: absolute;
+  left: 50%;
+  top: 104px;
+  width: 96px;
+  height: 96px;
+  transform: translateX(-50%);
+  border-radius: 18px 18px 22px 22px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.18), transparent 30%),
+    linear-gradient(180deg, #20143f, #0c1025 74%);
+  border: 2px solid rgba(116,243,247,.72);
+  box-shadow:
+    inset 0 0 22px rgba(168,123,255,.38),
+    0 0 28px rgba(47,225,232,.52),
+    0 0 58px rgba(255,90,44,.24);
+}
+.mage-body::before,
+.mage-body::after {
+  content: "";
+  position: absolute;
+  top: 34px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--spark);
+  box-shadow: 0 0 12px var(--spark), 0 0 24px rgba(47,225,232,.55);
+}
+.mage-body::before { left: 24px; }
+.mage-body::after { right: 24px; }
+.mage-orb {
+  position: absolute;
+  right: 4px;
+  top: 116px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, #fff 0 8%, var(--spark) 9% 20%, var(--cyan-hi) 48%, var(--volt-hi) 76%);
+  border: 1px solid rgba(255,255,255,.7);
+  box-shadow:
+    0 0 16px var(--spark),
+    0 0 38px var(--cyan),
+    0 0 68px var(--volt);
+  animation: orbPulse 1.8s ease-in-out infinite;
+}
+.mage-orb::after {
+  content: "";
+  position: absolute;
+  inset: -18px;
+  border-radius: inherit;
+  border: 1px dashed rgba(255,255,255,.28);
+  animation: spin 5s linear infinite;
+}
+.mage-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 118px;
+  height: 20px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(47,225,232,.34), rgba(168,123,255,.18) 42%, transparent 72%);
+  filter: blur(3px);
+}
+@keyframes mageFloat { 0%,100%{ transform: translateY(-7px);} 50%{ transform: translateY(7px);} }
+@keyframes rainbowSpin { to { transform: rotate(360deg); } }
+@keyframes orbPulse { 0%,100%{ transform: scale(.94); } 50%{ transform: scale(1.08); } }
 
 /* orbiting element nodes */
 .orbit { position:absolute; inset:0; animation: spin 22s linear infinite; }
@@ -374,7 +488,11 @@ html.reveal-done .reveal { opacity:1 !important; transform:none !important; tran
 }
 .way.tower li .ic { background: var(--fire); box-shadow:0 0 8px var(--fire); }
 
-.way__link { font-family:var(--disp); font-size:13px; letter-spacing:.1em; text-transform:uppercase; display:inline-flex; gap:8px; align-items:center; }
+.way__link { font-family:var(--disp); font-size:13px; letter-spacing:.1em; text-transform:uppercase; display:inline-flex; gap:8px; align-items:center; width: fit-content; padding: 10px 0; cursor: none; position: relative; }
+.way__link::after { content:""; position:absolute; left:0; bottom:4px; width:100%; height:1px; transform: scaleX(.18); transform-origin:left; transition: transform .22s ease; background: currentColor; box-shadow:0 0 10px currentColor; }
+.way__link:hover::after { transform: scaleX(1); }
+.way__link:hover svg { transform: translateX(4px); }
+.way__link svg { transition: transform .22s ease; }
 .way.duel .way__link { color: var(--cyan-hi); }
 .way.tower .way__link { color: var(--fire-hi); }
 

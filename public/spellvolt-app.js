@@ -77,6 +77,22 @@
   addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
+
+  /* ---------- robust in-page anchor jumps ---------- */
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const id = a.getAttribute("href");
+    if (!id || id === "#") return;
+    const target = document.querySelector(id);
+    if (!target) return;
+    e.preventDefault();
+    const navH = nav ? nav.getBoundingClientRect().height : 0;
+    const y = Math.max(0, target.getBoundingClientRect().top + scrollY - navH - 22);
+    window.scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
+    history.replaceState(null, "", id);
+  });
+
   /* ---------- reveal on scroll ---------- */
   const io = new IntersectionObserver((entries) => {
     for (const en of entries) {
